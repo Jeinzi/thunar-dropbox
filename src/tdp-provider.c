@@ -65,11 +65,11 @@ THUNARX_DEFINE_TYPE_WITH_CODE (TdpProvider,
 
 /************************************ Other ***********************************/
 
-static void tdp_provider_class_init(TdpProviderClass * klass)
+static void tdp_provider_class_init(TdpProviderClass * class)
 {
 	GObjectClass * gobject_class;
 
-	gobject_class = G_OBJECT_CLASS(klass);
+	gobject_class = G_OBJECT_CLASS(class);
 	gobject_class->finalize = tdp_provider_finalize;
 }
 
@@ -80,18 +80,21 @@ static void tdp_provider_menu_provider_init(ThunarxMenuProviderIface * iface)
 
 static void tdp_provider_init(TdpProvider * tdp_provider)
 {
-
+	// Suppress -Wunused-parameter warning.
+	(void)tdp_provider;
 }
 
 static void tdp_provider_finalize(GObject * object)
 {
-	TdpProvider * tdp_provider = TDP_PROVIDER(object);
-
+	TDP_PROVIDER(object);
 	(*G_OBJECT_CLASS(tdp_provider_parent_class)->finalize)(object);
 }
 
 static void tdp_callback(ThunarxMenuItem * item, gpointer data)
 {
+	// Suppress -Wunused-parameter warning.
+	(void)item;
+
 	GList * actioninfo = (GList*)data;
 	gchar * verb = NULL;
 
@@ -106,6 +109,9 @@ static void tdp_callback(ThunarxMenuItem * item, gpointer data)
 
 static void tdp_closure_destroy_notify(gpointer data, GClosure * closure)
 {
+	// Suppress -Wunused-parameter warning.
+	(void)closure;
+
 	GList * actioninfo = (GList*)data;
 	GList * lp;
 
@@ -162,12 +168,15 @@ static GList * tdp_provider_get_file_actions(
 	GtkWidget * window,
 	GList * files)
 {
+	// Suppress -Wunused-parameter warning.
+	(void)menu_provider;
+	(void)window;
+
 	ThunarxMenu * menu = thunarx_menu_new();
+	gchar * path;
 	GFile * file;
 	GList * actions = NULL;
 	GList * lp;
-	gchar * path;
-
 	GList * filelist = NULL;
 
 	int socket;
@@ -240,7 +249,7 @@ static GList * tdp_provider_get_file_actions(
 				if(len > 1)
 				{
 					// First array element is an "options"-tag.
-					int i;
+					guint i;
 					for(i = 1; i < len; i++)
 					{
 						add_action(menu, filelist, argval[i]);

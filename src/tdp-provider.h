@@ -29,7 +29,7 @@
 
 #include <thunarx/thunarx.h>
 
-G_BEGIN_DECLS;
+G_BEGIN_DECLS
 
 typedef struct _TdpProviderClass TdpProviderClass;
 typedef struct _TdpProvider TdpProvider;
@@ -44,6 +44,6 @@ typedef struct _TdpProvider TdpProvider;
 GType tdp_provider_get_type			(void) G_GNUC_CONST G_GNUC_INTERNAL;
 void  tdp_provider_register_type	(ThunarxProviderPlugin * plugin) G_GNUC_INTERNAL;
 
-G_END_DECLS;
+G_END_DECLS
 
 #endif
