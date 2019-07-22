@@ -1,11 +1,17 @@
 Thunar-Dropbox authors/contributors:
 
 Maato <maato@softwarebakery.com>
- - Developer
+ - Original developer
+
+Jeinzi <jeinzi@gmx.de>
+ - Implemented submenu
+
+Hudd A <hededrk@gmail.com>
+ - Fixed crash when files with invalid UTF-8 encoded filenames were selected.
+
+twa022
+ - Port to thunarx-3
 
 Pablo Lezaeta <prflr88@gmail.com>
  - Install library with proper permissions, respect --libdir.
  - README
-
-Hudd A <hededrk@gmail.com>
- - Fixed crash when files with invalid UTF-8 encoded filenames were selected.

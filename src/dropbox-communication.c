@@ -1,25 +1,29 @@
-//##############################################################################
-// thunar-dropbox
-//
-// dropbox-communication.c
-// 
-// Copyright 2010 Maato
-//
-// Authors:
-//    Maato <maato@softwarebakery.com>
-//
-// This program is free software: you can redistribute it and/or modify it
-// under the terms of the GNU General Public License version 3, as published
-// by the Free Software Foundation.
-//
-// This program is distributed in the hope that it will be useful, but
-// WITHOUT ANY WARRANTY; without even the implied warranties of
-// MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR
-// PURPOSE.  See the GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License along
-// with this program.  If not, see <http://www.gnu.org/licenses/>.
-//##############################################################################
+/*******************************************************************************
+ * thunar-dropbox
+ *
+ * dropbox-communication.c
+ *
+ * Copyright © 2010-2018 Maato
+ * Copyright © 2019 Jeinzi
+ *
+ * Authors:
+ *    Maato <maato@softwarebakery.com>
+ *    Jeinzi <jeinzi@gmx.de>
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 3, as published
+ * by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranties of
+ * MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ ******************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
@@ -29,9 +33,9 @@
 #include <errno.h>
 #include <unistd.h>
 
-//##############################################################################
-// Exported functions
-//##############################################################################
+
+/***************************** Exported functions *****************************/
+
 gboolean dropbox_connect(int * sock)
 {
 	int flags = 0;
@@ -41,23 +45,23 @@ gboolean dropbox_connect(int * sock)
 	struct timeval tv;
 	*sock = -1;
 
-	// Initialize address structure
+	// Initialize address structure.
 	memset(&address, 0x0, sizeof(address));
 	address.sun_family = AF_UNIX;
 	g_snprintf(address.sun_path, sizeof(address.sun_path),
 		"%s/.dropbox/command_socket", g_get_home_dir());
 
-	// Calculate the length of the address
+	// Calculate the length of the address.
 	address_length = sizeof(address) - sizeof(address.sun_path) +
 		strlen(address.sun_path);
 
-	// Create socket
+	// Create socket.
 	retval = socket(PF_UNIX, SOCK_STREAM, 0);
 	if(retval < 0)
 		goto failed;
 	*sock = retval;
 
-	// Set connect timeout
+	// Set connect timeout.
 	tv.tv_sec = 0;
 	tv.tv_usec = 1000 * 50;
 	retval = setsockopt(*sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
@@ -67,7 +71,7 @@ gboolean dropbox_connect(int * sock)
 	if(retval < 0)
 		goto failed;
 
-	// Set native non-blocking, for connect timeout
+	// Set native non-blocking, for connect timeout.
 	retval = fcntl(*sock, F_GETFL, 0);
 	if(retval < 0)
 		goto failed;
@@ -76,7 +80,7 @@ gboolean dropbox_connect(int * sock)
 	if(retval < 0)
 		goto failed;
 
-	// Connect
+	// Connect.
 	retval = connect(*sock, (struct sockaddr*)&address, address_length);
 	if(retval < 0 && errno == EINPROGRESS)
 	{
@@ -87,12 +91,12 @@ gboolean dropbox_connect(int * sock)
 		FD_ZERO(&writers);
 		FD_SET(*sock, &writers);
 
-		// Wait for the socket to be ready
+		// Wait for the socket to be ready.
 		retval = select((*sock)+1, NULL, &writers, NULL, &tv);
 		if(retval == 0)
 			goto failed;
 
-		// Try to connect again
+		// Try to connect again.
 		retval = connect(*sock, (struct sockaddr*)&address, address_length);
 		if(retval < 0)
 			goto failed;
@@ -102,7 +106,7 @@ gboolean dropbox_connect(int * sock)
 		goto failed;
 	}
 
-	// Set socket to blocking
+	// Set socket to blocking.
 	retval = fcntl(*sock, F_SETFL, flags);
 	if(retval < 0)
 		goto failed;
@@ -168,4 +172,3 @@ void dropbox_do_verb(gchar * verb, GList * files)
 
 	g_io_channel_unref(io_channel);
 }
-
