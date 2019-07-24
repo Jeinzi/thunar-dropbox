@@ -57,7 +57,7 @@ gboolean dropbox_connect(int * sock)
 
 	// Create socket.
 	retval = socket(PF_UNIX, SOCK_STREAM, 0);
-	if(retval < 0)
+	if (retval < 0)
 		goto failed;
 	*sock = retval;
 
@@ -65,25 +65,24 @@ gboolean dropbox_connect(int * sock)
 	tv.tv_sec = 0;
 	tv.tv_usec = 1000 * 50;
 	retval = setsockopt(*sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-	if(retval < 0)
+	if (retval < 0)
 		goto failed;
 	retval = setsockopt(*sock, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
-	if(retval < 0)
+	if (retval < 0)
 		goto failed;
 
 	// Set native non-blocking, for connect timeout.
 	retval = fcntl(*sock, F_GETFL, 0);
-	if(retval < 0)
+	if (retval < 0)
 		goto failed;
 	flags = retval;
 	retval = fcntl(*sock, F_SETFL, flags | O_NONBLOCK);
-	if(retval < 0)
+	if (retval < 0)
 		goto failed;
 
 	// Connect.
 	retval = connect(*sock, (struct sockaddr*)&address, address_length);
-	if(retval < 0 && errno == EINPROGRESS)
-	{
+	if (retval < 0 && errno == EINPROGRESS) {
 		fd_set writers;
 		tv.tv_sec = 1;
 		tv.tv_usec = 0;
@@ -93,28 +92,27 @@ gboolean dropbox_connect(int * sock)
 
 		// Wait for the socket to be ready.
 		retval = select((*sock)+1, NULL, &writers, NULL, &tv);
-		if(retval == 0)
+		if (retval == 0)
 			goto failed;
 
 		// Try to connect again.
 		retval = connect(*sock, (struct sockaddr*)&address, address_length);
-		if(retval < 0)
+		if (retval < 0)
 			goto failed;
 	}
-	else if(retval < 0)
-	{
+	else if (retval < 0) {
 		goto failed;
 	}
 
 	// Set socket to blocking.
 	retval = fcntl(*sock, F_SETFL, flags);
-	if(retval < 0)
+	if (retval < 0)
 		goto failed;
 
 	return TRUE;
 
 failed:
-	if(*sock != -1)
+	if (*sock != -1)
 		close(*sock);
 	*sock = -1;
 	return FALSE;
@@ -125,14 +123,12 @@ void dropbox_write(GIOChannel * io_channel, char * str)
 	gsize bytes_written;
 	GIOStatus status;
 
-	do
-	{
+	do {
 		status = g_io_channel_write_chars(io_channel, str, -1,
 			&bytes_written, NULL);
-	} while(status == G_IO_STATUS_AGAIN);
+	} while (status == G_IO_STATUS_AGAIN);
 
-	if(status == G_IO_STATUS_ERROR)
-	{
+	if (status == G_IO_STATUS_ERROR) {
 		fprintf(stderr, "dropbox_write() - G_IO_STATUS_ERROR\n");
 		exit(EXIT_FAILURE);
 	}
@@ -145,8 +141,7 @@ void dropbox_do_verb(gchar * verb, GList * files)
 	int socket = 0;
 	GIOChannel * io_channel = NULL;
 
-	if(!dropbox_connect(&socket))
-	{
+	if (!dropbox_connect(&socket)) {
 		fprintf(stderr, "Connecting failed\n");
 		return;
 	}
@@ -158,8 +153,7 @@ void dropbox_do_verb(gchar * verb, GList * files)
 	dropbox_write(io_channel, "icon_overlay_context_action\n");
 	dropbox_write(io_channel, "paths");
 
-	for(lp = files; lp != NULL; lp = lp->next)
-	{
+	for (lp = files; lp != NULL; lp = lp->next) {
 		dropbox_write(io_channel, "\t");
 		dropbox_write(io_channel, lp->data);
 	}
@@ -169,6 +163,5 @@ void dropbox_do_verb(gchar * verb, GList * files)
 	dropbox_write(io_channel, "\ndone\n");
 
 	g_io_channel_flush(io_channel, NULL);
-
 	g_io_channel_unref(io_channel);
 }

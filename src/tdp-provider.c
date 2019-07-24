@@ -68,7 +68,6 @@ THUNARX_DEFINE_TYPE_WITH_CODE (TdpProvider,
 static void tdp_provider_class_init(TdpProviderClass * class)
 {
 	GObjectClass * gobject_class;
-
 	gobject_class = G_OBJECT_CLASS(class);
 	gobject_class->finalize = tdp_provider_finalize;
 }
@@ -98,7 +97,7 @@ static void tdp_callback(ThunarxMenuItem * item, gpointer data)
 	GList * actioninfo = (GList*)data;
 	gchar * verb = NULL;
 
-	if(actioninfo == NULL)
+	if (actioninfo == NULL)
 		return;
 
 	verb = actioninfo->data;
@@ -115,8 +114,7 @@ static void tdp_closure_destroy_notify(gpointer data, GClosure * closure)
 	GList * actioninfo = (GList*)data;
 	GList * lp;
 
-	for(lp = actioninfo; lp != NULL; lp = lp->next)
-	{
+	for (lp = actioninfo; lp != NULL; lp = lp->next) {
 		g_free(lp->data);
 	}
 
@@ -131,16 +129,14 @@ static void add_action(ThunarxMenu * menu, GList * filelist, gchar * str)
 	GList * actioninfo = NULL;
 	GList * iter;
 
-	for(iter = filelist; iter != NULL; iter = iter->next)
-	{
+	for (iter = filelist; iter != NULL; iter = iter->next) {
 		actioninfo = g_list_append(actioninfo, g_strdup(iter->data));
 	}
 
 	argval = g_strsplit(str, "~", 0);
 	len = g_strv_length(argval);
 
-	if(len == 3)
-	{
+	if (len == 3) {
 		gchar unique_name[128];
 		g_sprintf(unique_name, "Tdp::%s", argval[2]);
 
@@ -180,7 +176,7 @@ static GList * tdp_provider_get_file_actions(
 	GList * filelist = NULL;
 
 	int socket;
-	if(!dropbox_connect(&socket))
+	if (!dropbox_connect(&socket))
 		return NULL;
 
 	GIOChannel * io_channel = g_io_channel_unix_new(socket);
@@ -190,19 +186,18 @@ static GList * tdp_provider_get_file_actions(
 	dropbox_write(io_channel, "icon_overlay_context_options\n");
 	dropbox_write(io_channel, "paths");
 
-	for(lp = files; lp != NULL; lp = lp->next)
-	{
+	for (lp = files; lp != NULL; lp = lp->next) {
 		file = thunarx_file_info_get_location(lp->data);
 		path = g_file_get_path(file);
 		g_object_unref (file);
-		if(path == NULL)
+		if (path == NULL)
 			continue;
 
-		if(!g_utf8_validate(path, -1, NULL))
+		if (!g_utf8_validate(path, -1, NULL))
 			continue;
 
 		char *real_path = realpath(path, NULL);
-		if(real_path) {
+		if (real_path) {
 			dropbox_write(io_channel, "\t");
 			dropbox_write(io_channel, real_path);
 			free(real_path);
@@ -219,39 +214,29 @@ static GList * tdp_provider_get_file_actions(
 	g_io_channel_flush(io_channel, NULL);
 
 	int n_items = 0;
-	for(;;)
-	{
+	for (;;) {
 		gchar * line;
 		GIOStatus status = g_io_channel_read_line(io_channel, &line,
 			NULL, NULL, NULL);
 
-		if(status == G_IO_STATUS_NORMAL)
-		{
-			if(g_strcmp0(line, "done\n") == 0)
-			{
+		if (status == G_IO_STATUS_NORMAL) {
+			if (g_strcmp0(line, "done\n") == 0) {
 				g_free(line);
 				break;
 			}
-			else if(g_strcmp0(line, "notok\n") == 0)
-			{
-			}
-			else if(g_strcmp0(line, "ok\n") == 0)
-			{
-			}
-			else
-			{
+			else if (g_strcmp0(line, "notok\n") == 0) {}
+			else if (g_strcmp0(line, "ok\n") == 0) {}
+			else {
 				gchar ** argval;
 				guint len;
 
 				argval = g_strsplit(line, "\t", 0);
 				len = g_strv_length(argval);
 
-				if(len > 1)
-				{
+				if (len > 1) {
 					// First array element is an "options"-tag.
 					guint i;
-					for(i = 1; i < len; i++)
-					{
+					for (i = 1; i < len; i++) {
 						add_action(menu, filelist, argval[i]);
 						n_items++;
 					}
@@ -262,17 +247,15 @@ static GList * tdp_provider_get_file_actions(
 
 			g_free(line);
 		}
-		else if(status == G_IO_STATUS_AGAIN)
-		{
+		else if (status == G_IO_STATUS_AGAIN) {
 			break;
 		}
-		else if(status == G_IO_STATUS_ERROR)
-		{
+		else if (status == G_IO_STATUS_ERROR) {
 			break;
 		}
 	}
 
-	if(n_items > 1) {
+	if (n_items > 1) {
 		ThunarxMenuItem * menu_root = thunarx_menu_item_new("Tdp::menu_root",
 			"Dropbox", "", "thunar-dropbox");
 		thunarx_menu_item_set_menu(menu_root, menu);
@@ -283,8 +266,7 @@ static GList * tdp_provider_get_file_actions(
 	}
 
 
-	for(lp = filelist; lp != NULL; lp = lp->next)
-	{
+	for (lp = filelist; lp != NULL; lp = lp->next) {
 		g_free(lp->data);
 	}
 	g_list_free(filelist);
