@@ -29,20 +29,21 @@
 
 #include <thunarx/thunarx.h>
 
+
 G_BEGIN_DECLS
 
 typedef struct _TdpProviderClass TdpProviderClass;
 typedef struct _TdpProvider TdpProvider;
 
-#define TDP_TYPE_PROVIDER				(tdp_provider_get_type())
-#define TDP_PROVIDER(obj)				(G_TYPE_CHECK_INSTANCE_CAST((obj),TDP_TYPE_PROVIDER, TdpProvider))
-#define TDP_PROVIDER_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST((klass), TDP_TYPE_PROVIDER, TdpProviderClass))
-#define TDP_IS_PROVIDER(obj)			(G_TYPE_CHECK_INSTANCE_TYPE((obj), TDP_TYPE_PROVIDER))
-#define TDP_IS_PROVIDER_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE((klass), TDP_TYPE_PROVIDER))
-#define TDP_PROVIDER_GET_CLASS(obj)		(G_TYPE_INSTANCE_GET_CLASS((obj),TDP_TYPE_PROVIDER, TdpProviderClass))
+#define TDP_TYPE_PROVIDER             (tdp_provider_get_type())
+#define TDP_PROVIDER(obj)             (G_TYPE_CHECK_INSTANCE_CAST((obj), TDP_TYPE_PROVIDER, TdpProvider))
+#define TDP_PROVIDER_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST((klass), TDP_TYPE_PROVIDER, TdpProviderClass))
+#define TDP_IS_PROVIDER(obj)          (G_TYPE_CHECK_INSTANCE_TYPE((obj), TDP_TYPE_PROVIDER))
+#define TDP_IS_PROVIDER_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE((klass), TDP_TYPE_PROVIDER))
+#define TDP_PROVIDER_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS((obj), TDP_TYPE_PROVIDER, TdpProviderClass))
 
-GType tdp_provider_get_type			(void) G_GNUC_CONST G_GNUC_INTERNAL;
-void  tdp_provider_register_type	(ThunarxProviderPlugin * plugin) G_GNUC_INTERNAL;
+GType tdp_provider_get_type           (void) G_GNUC_CONST G_GNUC_INTERNAL;
+void  tdp_provider_register_type      (ThunarxProviderPlugin * plugin) G_GNUC_INTERNAL;
 
 G_END_DECLS
 
