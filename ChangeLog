@@ -1,6 +1,10 @@
+0.3.1:
+	- Fix compiler warnings.
+	- Switch from waf to CMake.
+
 0.3.0:
-    - Port to thunarx-3
-    - Options grouped into submenu.
+	- Port to thunarx-3.
+	- Group options into submenu.
 
 0.2.1:
 	- Fixed crash when files with invalid UTF-8 encoded filenames were selected.
