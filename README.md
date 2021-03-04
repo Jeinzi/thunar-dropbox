@@ -7,11 +7,20 @@ Dropbox. It was originally developed by [Maato](https://github.com/Maato/thunar-
 
 ## Installation
 ### Dependencies
-Depending on your distribution you might have to install 
-`libthunarx-3`.
+Depending on your distribution you might have to install `libthunarx-3`.
 
 ### From a repository
-This version of the plugin is currently only available at the [AUR](https://aur.archlinux.org/packages/thunar-dropbox/).
+The plugin is available in the repositories of most distributions, check it out here:
+
+<a href="https://repology.org/project/thunar-dropbox-plugin/versions">
+    <img src="https://repology.org/badge/vertical-allrepos/thunar-dropbox-plugin.svg?minversion=0.3.0&columns=2" alt="Packaging status thunar-dropbox-plugin" style="vertical-align: top;">
+</a>
+<a href="https://repology.org/project/thunar-dropbox/versions">
+    <img src="https://repology.org/badge/vertical-allrepos/thunar-dropbox.svg?minversion=0.3.0" alt="Packaging status thunar-dropbox" style="vertical-align: top;">
+</a>
+<a href="https://repology.org/project/thunar-plugin-dropbox/versions">
+    <img src="https://repology.org/badge/vertical-allrepos/thunar-plugin-dropbox.svg?minversion=0.3.0" alt="Packaging status thunar-plugin-dropbox" style="vertical-align: top;">
+</a>
 
 ### From source
     cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr .
