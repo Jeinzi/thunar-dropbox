@@ -23,7 +23,7 @@ The plugin is available in the repositories of most distributions, check it out 
 </a>
 
 ### From source
-    cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr .
+    cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/lib .
     cmake --build build
 
 The first call to cmake configures the build system. The -B flag specifies the output directory, here _build_. The dot at the end is the path to the directory containing _CMakeLists.txt_.  

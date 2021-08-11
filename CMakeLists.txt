@@ -38,6 +38,6 @@ target_link_libraries(thunar-dropbox ${GIO_LIBRARIES})
 
 # Installation
 install(TARGETS thunar-dropbox
-        DESTINATION "lib/thunarx-3")
+        DESTINATION "thunarx-3")
 install(FILES "data/icons/hicolor/16x16/apps/thunar-dropbox.png"
         DESTINATION "share/icons/hicolor/16x16/apps")
