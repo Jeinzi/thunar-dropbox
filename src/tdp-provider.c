@@ -258,7 +258,7 @@ static GList * tdp_provider_get_file_actions(
             g_free(line);
         }
         else if (status == G_IO_STATUS_AGAIN) {
-            break;
+            continue;
         }
         else if (status == G_IO_STATUS_ERROR) {
             break;
